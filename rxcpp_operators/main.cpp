@@ -1,19 +1,25 @@
 #include <rx.hpp>
 #include <chrono>
 #include <string>
+#include <memory>
+#include <fmt/ostream.h>
 
 int main() {
     int counter = 0, count = 0;
-    auto values = rxcpp::observable<>::range(1, 1000000).window_with_time_or_count(std::chrono::seconds(1), 100000);
+    auto values = rxcpp::observable<>::range(1, 1000000)
+        .window_with_time_or_count(std::chrono::seconds(1), 100000);
     values.
         subscribe(
-            [&counter, &count](rxcpp::observable<int> v) {
+            [&counter, &count](rxcpp::observable<int> window) {
         int id = counter++;
         printf("[window %d] Create window\n", id);
-        v.count().subscribe([](int c) {printf("Count in window: %d\n", c); });
-        v.scan(std::string(), [](std::string s, int v) {return s + std::to_string(v); }).last().subscribe([](std::string v) {printf("Len: %zd\n", v.length()); });
-        v.subscribe(
-            [id, &count](int v) {count++;/*printf("[window %d] OnNext: %d\n", id, v); */},
+        window.count()
+            .subscribe([](int c) {printf("Count in window: %d\n", c); });
+        window.scan(std::make_shared<fmt::MemoryWriter>(), [](std::shared_ptr<fmt::MemoryWriter> const& w, int v) { *w << v; return w; })
+            .last()
+            .subscribe([](std::shared_ptr<fmt::MemoryWriter> const& w) {printf("Len: %zd\n", w->size()); });
+        window.subscribe(
+            [id, &count](int v) {count++;},
             [id, &count]() {printf("[window %d] OnCompleted: %d\n", id, count); });
     });
 }
