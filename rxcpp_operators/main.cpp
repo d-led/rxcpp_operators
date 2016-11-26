@@ -13,10 +13,11 @@ int main() {
             .subscribe([](int c) {
                 printf("Count in window: %d\n", c);
             });
-            window.scan(std::make_shared<fmt::MemoryWriter>(), [](std::shared_ptr<fmt::MemoryWriter> const& w, int v) {
+        window.scan(std::make_shared<fmt::MemoryWriter>(), [](std::shared_ptr<fmt::MemoryWriter> const& w, int v) {
                 *w << v;
                 return w;
             })
+            .start_with(std::make_shared<fmt::MemoryWriter>())
             .last()
             .subscribe([](std::shared_ptr<fmt::MemoryWriter> const& w) {
                 printf("Len: %zd (%s...)\n", w->size(), w->str().substr(0, 42).c_str()); 
