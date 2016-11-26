@@ -1,8 +1,4 @@
-#include <rx.hpp>
-#include <chrono>
-#include <string>
-#include <memory>
-#include <fmt/ostream.h>
+#include "stdafx.h"
 
 int main() {
     int counter = 0, count = 0;
