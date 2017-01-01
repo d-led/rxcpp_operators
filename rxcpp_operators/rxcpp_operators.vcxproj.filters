@@ -33,6 +33,12 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="active_object_example.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="windowing_example.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
