@@ -3,8 +3,8 @@
 void windowing_example() {
     int counter = 0, count = 0;
 
-    auto values = rxcpp::observable<>::range(1, 1000000)
-        .window_with_time_or_count(std::chrono::seconds(1), 100000);
+    auto values = rxcpp::observable<>::range(1, 1000'000)
+        .window_with_time_or_count(std::chrono::seconds(1), 100'000);
     
     values.
         subscribe(
@@ -25,7 +25,7 @@ void windowing_example() {
                 .last()
                 .subscribe(
                     [](std::shared_ptr<fmt::MemoryWriter> const& w) {
-                        fmt::print("Len: {} ({}...)\n", w->size(), w->str().substr(0, 42).c_str());
+                        fmt::print("Len: {} ({}...)\n", w->size(), w->str().substr(0, 42));
                     },
                     [](std::exception_ptr ep) {
                         try { std::rethrow_exception(ep); }
@@ -41,7 +41,7 @@ void windowing_example() {
                       count++;
                     },
                     [id, &count]() {
-                        printf("[window %d] OnCompleted: %d\n", id, count);
+                        fmt::print("[window {}] OnCompleted: {}\n", id, count);
                     }
                 );
             }
